@@ -9,4 +9,10 @@ add_executable(AccessControlSystem main.c
         utils.c
         utils.h
         door_man.c
-        door_man.h)
+        door_man.h
+        records_op.c
+        records_op.h
+        card_man.c
+        card_man.h
+        resident_man.c
+        resident_man.h)

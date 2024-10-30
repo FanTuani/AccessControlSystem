@@ -3,6 +3,9 @@
 #include "display.h"
 #include "door_man.h"
 #include "utils.h"
+#include "records_op.h"
+#include "card_man.h"
+#include "resident_man.h"
 
 void displayMainMenu() {
     clearScreen();
@@ -13,17 +16,27 @@ void displayMainMenu() {
     printf("5. Exit\n");
 
     char op;
-    scanf("%c", &op);
+    scanf(" %c", &op);
     getchar();
+    int doorID, cardID;
     switch (op) {
         case '1':
             displayDoorMan();
             break;
         case '2':
+            displayCardMan();
             break;
         case '3':
+            displayResidentMan();
             break;
         case '4':
+            printf("door id: ");
+            scanf("%d", &doorID);
+            getchar();
+            printf("card id: ");
+            scanf("%d", &cardID);
+            getchar();
+            openDoor(doorID, cardID);
             break;
         case '5':
             exit(0);
@@ -32,39 +45,59 @@ void displayMainMenu() {
     }
 }
 
+void displayDoors() {
+    printf("-- Doors Information --\n");
+    for (int i = 0; i < doorSize; i++) {
+        printf("Door ID: %d, Associated Card ID: %d\n", doors[i].id, doors[i].card);
+    }
+    printf("\n");
+}
+
+void displayCards() {
+    printf("-- Cards Information --\n");
+    for (int i = 0; i < cardSize; i++) {
+        printf("Card ID: %d, Associated Door ID: %d, Residents: ", cards[i].id, cards[i].door);
+        for (int j = 0; j < LEN && cards[i].residents[j][0] != '\0'; j++) {
+            printf("%s ", cards[i].residents[j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void displayResidents() {
+    printf("-- Residents Information --\n");
+    for (int i = 0; i < residentSize; i++) {
+        printf("Resident Name: %s, Associated Card ID: %d\n", residents[i].name, residents[i].card);
+    }
+    printf("\n");
+}
+
 void displayDoorMan() {
     clearScreen();
-    printf("--Door Management--\n");
+    displayDoors();
+    printf("-- Door Management --\n");
     printf("1. Add Door\n");
     printf("2. Remove Door\n");
-    printf("3. Modify Door\n");
-    printf("4. Return\n");
+    printf("3. Return\n");
+
     char op;
     scanf("%c", &op);
     getchar();
-    char id[MAX_LEN];
+
+    int id, cardID;
     switch (op) {
         case '1':
             printf("ID to add: ");
-            scanf("%s", id);
-            getchar();
-            addDoor(id);
+            scanf("%d", &id);
+            printf("Associated Card ID: ");
+            scanf("%d", &cardID);
+            addDoor(id, cardID);
             break;
         case '2':
             printf("ID to be removed: ");
-            scanf("%s", id);
-            getchar();
+            scanf("%d", &id);
             removeDoor(id);
-            break;
-        case '3':
-            printf("ID to be modified: ");
-            scanf("%s", id);
-            getchar();
-            printf("new ID: ");
-            char newID[MAX_LEN];
-            scanf("%s", newID);
-            getchar();
-            modifyDoor(id);
             break;
         default:
             return;
@@ -73,9 +106,71 @@ void displayDoorMan() {
 }
 
 void displayCardMan() {
+    clearScreen();
+    displayCards();
 
+    printf("-- Cards Management --\n");
+    printf("1. Add Card\n");
+    printf("2. Remove Card\n");
+    printf("3. Return\n");
+
+    char op;
+    scanf("%c", &op);
+    getchar();
+
+    int id, doorID;
+    switch (op) {
+        case '1':
+            printf("ID to add: ");
+            scanf("%d", &id);
+            printf("Associated Door ID: ");
+            scanf("%d", &doorID);
+            char name[30];
+            printf("Associated Resident Name: ");
+            scanf("%s", name);
+            addCard(id, doorID, name);
+            break;
+        case '2':
+            printf("ID to be removed: ");
+            scanf("%d", &id);
+            removeCard(id);
+            break;
+        default:
+            return;
+    }
+    getchar();
 }
 
 void displayResidentMan() {
-    
+    clearScreen();
+    displayResidents();
+
+    printf("-- Residents Management --\n");
+    printf("1. Add Resident\n");
+    printf("2. Remove Resident\n");
+    printf("3. Return\n");
+
+    char op;
+    scanf("%c", &op);
+    getchar();
+
+    char name[30];
+    int cardID;
+    switch (op) {
+        case '1':
+            printf("Name of Resident: ");
+            scanf("%s", name);
+            printf("Associated Card ID: ");
+            scanf("%d", &cardID);
+            addResident(name, cardID);
+            break;
+        case '2':
+            printf("Name of Resident to remove: ");
+            scanf("%s", name);
+            removeResident(name);
+            break;
+        default:
+            return;
+    }
+    getchar();
 }

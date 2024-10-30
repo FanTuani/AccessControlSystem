@@ -1,9 +1,9 @@
-#include <stdio.h>
+#include "records_op.h"
 #include "display.h"
 
 int main() {
+    initRecords();
     while (1) {
         displayMainMenu();
     }
-    return 0;
 }

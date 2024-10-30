@@ -9,4 +9,10 @@ void displayCardMan();
 
 void displayResidentMan();
 
+void displayDoors();
+
+void displayCards();
+
+void displayResidents();
+
 #endif //ACCESSCONTROLSYSTEM_DISPLAY_H
