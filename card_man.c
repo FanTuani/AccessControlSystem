@@ -1,29 +1,41 @@
 #include <stdio.h>
 #include "records_op.h"
 #include "card_man.h"
-#include <stdio.h>
+#include "door_man.h"
+#include "resident_man.h"
 #include <string.h>
-#include <malloc.h>
-#include "records_op.h"
 
 void addCard(int id, int associatedDoorID, const char *residentName) {
+    if (cardSize >= LEN) {
+        printf("Cannot add more cards, limit reached.\n");
+        return;
+    }
+
     cards[cardSize].id = id;
     cards[cardSize].door = associatedDoorID;
+    strncpy(cards[cardSize].resident, residentName, LEN - 1);
+    cards[cardSize].resident[LEN - 1] = '\0';
 
-    for (int i = 0; i < LEN; i++) {
-        if (cards[cardSize].residents[i] == NULL) {
-            cards[cardSize].residents[i] = malloc(strlen(residentName) + 1);
-            if (cards[cardSize].residents[i] != NULL) {
-                strcpy(cards[cardSize].residents[i], residentName);
-            }
+    int doorFound = 0;
+    for (int i = 0; i < doorSize; i++) {
+        if (doors[i].id == associatedDoorID) {
+            doorFound = 1;
             break;
         }
     }
 
+    if (!doorFound) {
+        printf("Door with ID %d not found. Adding the door.\n", associatedDoorID);
+        addDoor(associatedDoorID, id);
+    }
+
+    addResident(residentName, id);
+
     cardSize++;
-    printf("Card with ID %d added, associated Door ID %d, Resident Name: %s.\n", id, associatedDoorID, residentName);
-    getchar();
+    printf("Card with ID %d added, associated Door ID %d, Resident Name: %s.\n", id, associatedDoorID,
+           cards[cardSize - 1].resident);
 }
+
 
 void removeCard(int id) {
     for (int i = 0; i < cardSize; i++) {

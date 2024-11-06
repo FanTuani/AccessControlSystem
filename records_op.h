@@ -3,7 +3,7 @@
 
 #define DOOR_FILE "doors.dat"
 #define CARD_FILE "cards.dat"
-#define RESIDENT_FILE "residents.dat"
+#define RESIDENT_FILE "resident.dat"
 #define LEN 100
 
 typedef struct Door {
@@ -14,7 +14,7 @@ typedef struct Door {
 typedef struct Card {
     int id;
     int door;
-    char *residents[LEN];
+    char resident[LEN];
 } Card;
 
 typedef struct Resident {

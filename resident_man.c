@@ -5,7 +5,7 @@
 
 void addResident(const char *name, int cardID) {
     if (residentSize >= LEN) {
-        printf("Cannot add more residents.\n");
+        printf("Cannot add more resident.\n");
         return;
     }
     strcpy(residents[residentSize].name, name);
@@ -22,18 +22,6 @@ void removeResident(const char *name) {
             }
             residentSize--;
             printf("Resident removed successfully.\n");
-            return;
-        }
-    }
-    printf("Resident not found.\n");
-    getchar();
-}
-
-void modifyResident(const char *name, int newCardID) {
-    for (int i = 0; i < residentSize; i++) {
-        if (strcmp(residents[i].name, name) == 0) {
-            residents[i].card = newCardID;
-            printf("Resident modified successfully.\n");
             return;
         }
     }

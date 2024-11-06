@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "display.h"
 #include "door_man.h"
 #include "utils.h"
@@ -7,8 +8,16 @@
 #include "card_man.h"
 #include "resident_man.h"
 
+#define PASSWORD "password"
+int rootPermission = 0;
+
 void displayMainMenu() {
     clearScreen();
+    if(rootPermission) {
+        printf("-- ADMIN --\n");
+    } else {
+        printf("-- GUEST --\n");
+    }
     printf("1. Doors Management\n");
     printf("2. Cards Management\n");
     printf("3. Residents Management\n");
@@ -18,6 +27,20 @@ void displayMainMenu() {
     char op;
     scanf(" %c", &op);
     getchar();
+    if (rootPermission == 0 && op < '4') {
+        clearScreen();
+        printf("Password: ");
+        char password[40];
+        scanf("%s", password);
+        getchar();
+        if (strcmp(password, PASSWORD) == 0) {
+            rootPermission = 1;
+        } else {
+            printf("INVALID PASSWORD\n");
+            getchar();
+            return;
+        }
+    }
     int doorID, cardID;
     switch (op) {
         case '1':
@@ -57,9 +80,7 @@ void displayCards() {
     printf("-- Cards Information --\n");
     for (int i = 0; i < cardSize; i++) {
         printf("Card ID: %d, Associated Door ID: %d, Residents: ", cards[i].id, cards[i].door);
-        for (int j = 0; j < LEN && cards[i].residents[j][0] != '\0'; j++) {
-            printf("%s ", cards[i].residents[j]);
-        }
+        printf("%s ", cards[i].resident);
         printf("\n");
     }
     printf("\n");
